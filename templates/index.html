@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% if message %}
+<pre style="word-wrap: break-word;"><p>{{ message }}</p></pre>
+{% endif %}
+
+<table width = "100%">
+  <tr>
+  <td>
+    <img src = "https://24smi.org/public/media/celebrity/2020/03/17/ndyuq11dpxep-rikardo-milos.jpg">
+  </td>
+  <td align = "center">
+    <iframe  width="640" height="360" allowfullscreen="true" src="https://www.youtube.com/embed/EW4dCKX7o9A"></iframe>
+  </td> 	
+  <td>  
+    <img align = "right" src = "https://24smi.org/public/media/celebrity/2020/03/17/ndyuq11dpxep-rikardo-milos.jpg">
+  </td>
+  </tr>
+</table>
+<form action="" method="post">
+  <p>
+    <label for="query">Напиши свой SQL запрос сюда и я его выполню</label>
+    <input type="text" name="query">
+  </p>
+  <p>
+    <input type="submit">
+  </p>
+</form>
+{% endblock %}
