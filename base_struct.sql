@@ -2,31 +2,20 @@ CREATE TABLE Projects (
     ID_proj INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT,
     Time_start TEXT,
-    Time_end TEXT,    
-    Is_closed INTEGER
+    Time_end TEXT  
 );
 
-CREATE TABLE Developers (
+CREATE TABLE Workers (
     ID_dev INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT,
-    Surname TEXT
+    Surname TEXT,
+    Email TEXT,
+    Is_fires INTEGER
 );
 
-CREATE TABLE Testers (
-    ID_test INTEGER PRIMARY KEY AUTOINCREMENT,
-    Name TEXT,
-    Surname TEXT
-);
-
-CREATE TABLE ProjectDeveloperLinks (
-    ID_proj INTEGER PRIMARY KEY,
+CREATE TABLE ProjectWorkerLinks (
+    ID_worker INTEGER PRIMARY KEY,
     ID_dev INTEGER,
-    Is_active INTEGER
-);
-
-CREATE TABLE ProjectTesterLinks (
-    ID_proj INTEGER PRIMARY KEY,
-    ID_test INTEGER,
     Is_active INTEGER
 );
 
@@ -40,7 +29,7 @@ CREATE TABLE Bugs (
     ID_fixer INTEGER,
     Time_found TEXT,
     Time_deadline TEXT,    
-    Is_closed INTEGER
+    Time_fixed TEXT
 );
 
 INSERT INTO Projects(Name, Time_start, Is_closed) VALUES ("Test_Project", datetime("now"), 0);
