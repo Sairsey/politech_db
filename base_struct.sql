@@ -6,7 +6,7 @@ CREATE TABLE Projects (
 );
 
 CREATE TABLE Workers (
-    ID_dev INTEGER PRIMARY KEY AUTOINCREMENT,
+    ID_worker INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT,
     Surname TEXT,
     Email TEXT,
@@ -15,8 +15,8 @@ CREATE TABLE Workers (
 );
 
 CREATE TABLE ProjectWorkerLinks (
-    ID_worker INTEGER PRIMARY KEY,
-    ID_dev INTEGER,
+    ID_proj INTEGER PRIMARY KEY,
+    ID_worker INTEGER,
     Is_active INTEGER
 );
 
@@ -35,3 +35,6 @@ CREATE TABLE Bugs (
 
 INSERT INTO Projects(Name, Time_start) VALUES ("Test_Project1", datetime("now"));
 INSERT INTO Projects(Name, Time_start, Time_end) VALUES ("Test_Project2", date('now','start of month', '-1 day'), datetime("now"));
+INSERT INTO Workers(Name, Surname, Email, Pos, Is_fired) VALUES ('Alexander', 'Sachuk', 'sachuk.aa@edu.spbstu.ru', 'Developer', 0);
+INSERT INTO ProjectWorkerLinks(ID_proj, ID_worker, Is_active) VALUES (1, 1, 1);
+

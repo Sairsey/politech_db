@@ -1,7 +1,27 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<script>
+    var IsAll = false;
+</script>
+<h1>Show All
+<label class="switch">
+  <input type="checkbox" onclick="
+  {
+    document.getElementById('Workers Table').remove();
+    if (IsAll)
+      loadAll('/db_tools/show_active_workers');
+    else
+      loadAll('/db_tools/show_all_workers');
+    IsAll = !IsAll;
+  }">
+  <span class="slider"></span>
+</label>
+</h1>
 
 <script src="{{url_for('static', filename='js/staff.js')}}"></script>
+<script>
+    loadAll("/db_tools/show_active_workers");
+</script>
 
 {% endblock%}

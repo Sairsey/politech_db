@@ -11,7 +11,7 @@
         <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png')}}">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png')}}">
         <link rel="manifest" href="{{ url_for('static', filename='favicon//site.webmanifest')}}">
-        <link rel="mask-icon" href=""{{ url_for('static', filename='favicon/safari-pinned-tab.svg')}}" color="#5bbad5">
+        <link rel="mask-icon" href="{{ url_for('static', filename='favicon/safari-pinned-tab.svg')}}" color="#5bbad5">
         <meta name="msapplication-TileColor" content="#2b5797">
         <meta name="theme-color" content="#ffffff">
 </head>
@@ -25,7 +25,7 @@
   <a href="/index">Home</a>
   <a href="/project">Project managment</a>
   <a href="/staff">Staff managment</a>
-  <a href="#">Statistics</a>
+  <a href="/bugs">Bugs</a>
 </div>
 
 <div class="content" id="content"{% block bodyargs %} {% endblock %}>
