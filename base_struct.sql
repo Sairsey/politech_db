@@ -10,7 +10,8 @@ CREATE TABLE Workers (
     Name TEXT,
     Surname TEXT,
     Email TEXT,
-    Is_fires INTEGER
+    Pos TEXT,
+    Is_fired INTEGER
 );
 
 CREATE TABLE ProjectWorkerLinks (
@@ -32,5 +33,5 @@ CREATE TABLE Bugs (
     Time_fixed TEXT
 );
 
-INSERT INTO Projects(Name, Time_start, Is_closed) VALUES ("Test_Project", datetime("now"), 0);
-INSERT INTO Projects(Name, Time_start, Time_end, Is_closed) VALUES ("Test_Project", date('now','start of month', '-1 day'), datetime("now"), 1);
+INSERT INTO Projects(Name, Time_start) VALUES ("Test_Project1", datetime("now"));
+INSERT INTO Projects(Name, Time_start, Time_end) VALUES ("Test_Project2", date('now','start of month', '-1 day'), datetime("now"));

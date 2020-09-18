@@ -1,18 +1,33 @@
 import os
 from flask import Flask, render_template, request
-import sqlite3
 from dbtools import DB
 import json
 
 app = Flask(__name__)
 
+show_commands = dict()
+show_commands["show_all_projects"] = "SELECT * from Projects"
+show_commands["show_all_workers"] = "SELECT * from Workers"
+
+add_commands = dict()
+add_commands["add_project"] = "INSERT INTO Projects(Name, Time_start) VALUES ('%s', '%s')"
+add_commands["add_worker"] = "INSERT INTO Workers(Name, Surname, Email, Pos, Is_fired) VALUES ('%s', '%s', '%s', '%s', 0)"
+
 @app.route('/db_tools/<command>', methods=['post'])
 def db_tools(command):
-  if (command == "show_all_projects"):
+  if (command in show_commands):
     base = DB()
-    msg = base.request("SELECT * from Projects")
-    del base     
+    msg = base.request(show_commands[command])
+    del base
     return json.dumps(msg), 200
+  command = command.split("&&&")
+  if (command[0] in add_commands):
+    base = DB()
+    params = tuple(command[1].split("|"))
+    msg = base.request(add_commands[command[0]], params)
+    del base
+    return json.dumps(msg), 200
+
   return "Unknown command", 404
 
 

@@ -6,9 +6,13 @@ class DB:
     self.conn = sqlite3.connect('database.db')
     self.c = self.conn.cursor()
     return
-  
-  def request(self, request):
-    self.c.execute(request)
+
+  def request(self, request, params = []):
+    if (params == []):
+      self.c.execute(request)
+    else:
+      print(request, params)
+      self.c.execute(request % params)
     self.conn.commit()
     return self.c.fetchall()
   
