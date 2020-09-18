@@ -1,1 +1,1 @@
-start python test_server.py
+start py test_server.py
