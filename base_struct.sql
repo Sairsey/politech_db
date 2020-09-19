@@ -15,7 +15,7 @@ CREATE TABLE Workers (
 );
 
 CREATE TABLE ProjectWorkerLinks (
-    ID_proj INTEGER PRIMARY KEY,
+    ID_proj INTEGER,
     ID_worker INTEGER,
     Is_active INTEGER
 );
@@ -33,8 +33,8 @@ CREATE TABLE Bugs (
     Time_fixed TEXT
 );
 
-INSERT INTO Projects(Name, Time_start) VALUES ("Test_Project1", datetime("now"));
-INSERT INTO Projects(Name, Time_start, Time_end) VALUES ("Test_Project2", date('now','start of month', '-1 day'), datetime("now"));
-INSERT INTO Workers(Name, Surname, Email, Pos, Is_fired) VALUES ('Alexander', 'Sachuk', 'sachuk.aa@edu.spbstu.ru', 'Developer', 0);
+INSERT INTO Projects(Name, Time_start) VALUES ("Test_Project1", date("now"));
+INSERT INTO Projects(Name, Time_start, Time_end) VALUES ("Test_Project2", date('now','start of month', '-1 day'), date("now"));
+INSERT INTO Workers(Name, Surname, Email, Pos, Is_fired) VALUES ('Alexander', 'Sachuk', 'sachuk.as@edu.spbstu.ru', 'Developer', 0);
 INSERT INTO ProjectWorkerLinks(ID_proj, ID_worker, Is_active) VALUES (1, 1, 1);
 

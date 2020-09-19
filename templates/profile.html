@@ -16,6 +16,13 @@
     headd.innerText = "Project";
   headd.innerText += " page";
   document.getElementById("content").appendChild(headd);
+
+  if (type == "staff" && id == 2) // Diana
+  {
+    milos = document.createElement('img');
+    milos.src = "https://24smi.org/public/media/celebrity/2020/03/17/ndyuq11dpxep-rikardo-milos.jpg";
+    document.getElementById("content").appendChild(milos);
+  }
   fields = [];
   if (type == "staff")
     fields = ["Id", "Name", "Surname", "Email", "Position", "Is Fired"];
@@ -42,26 +49,97 @@
     fields = ["", ""];
 
   list = document.createElement("ul");
+
+  el = document.createElement("li");
+
+  sel = document.createElement("select");
+  sel.classList.add("my_input");
+  sel.id = "add_select";
+  sel.style = "width:auto;"
+
+  data2 = [];
+  if (type == "project")
+    data2 = JSON.parse(my_post_request("/db_tools/show_min_staff"));
+  else if (type == "staff")
+    data2 = JSON.parse(my_post_request("/db_tools/show_min_projects"));
+
+  for (i = 0; i < data2.length; i++)
+  {
+    opt = document.createElement("option");
+    opt.value = data2[i][0];
+    if (type == "project")
+      opt.innerText = data2[i][1] + " " + data2[i][2];
+    else
+      opt.innerText = data2[i][1];
+    sel.appendChild(opt);
+  }
+
+  el.appendChild(document.createElement("button"));
+  el.lastChild.classList.add("plus-button");
+  el.lastChild.innerText = "\u002B";
+  el.lastChild.onclick = function()
+  {
+    to_add = document.getElementById("add_select").value;
+    active_proj_counter = 0
+    if (type == "staff")
+      active_proj_counter = JSON.parse(my_post_request("/db_tools/count_worker_projects&&&" + id));
+    else if (type == "project")
+      active_proj_counter = JSON.parse(my_post_request("/db_tools/count_worker_projects&&&" + to_add));
+    if (active_proj_counter > 1)
+    {
+      alert("This person have too many projects");
+      return;
+    }
+    is_already_added = 0
+    if (type == "staff")
+      is_already_added = JSON.parse(my_post_request("/db_tools/count_worker_current_project&&&" + id + "|" + to_add));
+    else if (type == "project")
+      is_already_added = JSON.parse(my_post_request("/db_tools/count_worker_current_project&&&" + to_add + "|" + id));
+
+    if (is_already_added != 0)
+    {
+      alert("This person already have this project");
+      return;
+    }
+
+    if (type == "staff")
+      my_post_request("/db_tools/add_link&&&" + to_add + "|" + id);
+    else if (type == "project")
+      my_post_request("/db_tools/add_link&&&" + id + "|" + to_add);
+    document.location.reload();
+  };
+
+  el.appendChild(sel);
+  list.appendChild(el);
+
+
   for (i = 0; i < data["childs"].length; i++)
   {
     el = document.createElement("li");
+    str0 = ""
+    str1 = "";
+    str2 = "";
+
     if (data["active"][i] == 0)
-      el.innerText += "\u274C";
+      str0 += "\u274C";
     else
-      el.innerText += "\u2705";
+      str0 += "\u2705";
     for (j = 0; j < fields.length; j++)
     {
       if (type == "project" && j == fields.length - 1)
       {
         if (data["childs"][i][0][j] == 1)
-          el.innerText += 'Fired';
+          str2 += 'Fired';
         else
-          el.innerText += 'Working';
+          str2 += 'Working';
       }
       else
-        el.innerText += fields[j] + " " + data["childs"][i][0][j] + " ";
+        str1 += fields[j] + "" + data["childs"][i][0][j] + " ";
     }
-
+    if (type == "staff")
+      el.innerHTML = str0 + "<a href='/profile?id=" + data["childs"][i][0][2] + "&type=project'>" + str1 + "</a>" + str2;
+    else if (type == "project")
+      el.innerHTML = str0 + "<a href='/profile?id=" + data["childs"][i][0][3] + "&type=staff'>" + str1 + "</a>" + str2;
     list.appendChild(el);
   }
   document.getElementById("content").appendChild(list);

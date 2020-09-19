@@ -12,10 +12,17 @@ show_commands["show_active_workers"] = "SELECT * from Workers WHERE Is_Fired = 0
 show_commands["show_all_workers"] = "SELECT * from Workers"
 show_commands["show_active_bugs"] = "SELECT * from Bugs WHERE ifnull(Time_Fixed, '') = ''"
 show_commands["show_all_bugs"] = "SELECT * from Bugs"
+show_commands["show_min_staff"] = "SELECT ID_worker, Name, Surname from Workers"
+show_commands["show_min_projects"] = "SELECT ID_proj, Name from Projects"
 
 add_commands = dict()
 add_commands["add_project"] = "INSERT INTO Projects(Name, Time_start) VALUES ('%s', '%s')"
 add_commands["add_worker"] = "INSERT INTO Workers(Name, Surname, Email, Pos, Is_fired) VALUES ('%s', '%s', '%s', '%s', 0)"
+add_commands["add_link"] = "INSERT INTO ProjectWorkerLinks(ID_proj, ID_worker, Is_active) VALUES (%s, %s, 1)"
+
+count_commands = dict()
+count_commands["count_worker_projects"] = "SELECT COUNT(*) FROM ProjectWorkerLinks WHERE ID_worker == '%s' AND Is_active = 1"
+count_commands["count_worker_current_project"] = "SELECT COUNT(*) FROM ProjectWorkerLinks WHERE ID_worker == '%s' AND Is_active = 1 AND ID_proj == '%s'"
 
 @app.route('/db_tools/<command>', methods=['post'])
 def db_tools(command):
@@ -31,6 +38,12 @@ def db_tools(command):
     msg = base.request(add_commands[command[0]], params)
     del base
     return json.dumps(msg), 200
+  if (command[0] in count_commands):
+    base = DB()
+    params = tuple(command[1].split("|"))
+    msg = base.request(count_commands[command[0]], params)
+    del base
+    return json.dumps(msg), 200
   if (command[0] == "profile_data"):
     base = DB()
     params = tuple(command[1].split("|"))
@@ -42,7 +55,7 @@ def db_tools(command):
       msg['childs'] = list()
       msg['active'] = list()
       for i in tmp_links:
-        q = base.request("SELECT Name, Surname, Is_Fired from Workers WHERE ID_worker = '%s'" % (i[1]))
+        q = base.request("SELECT Name, Surname, Is_Fired, ID_worker from Workers WHERE ID_worker = '%s'" % (i[1]))
         msg['childs'].append(q)
         msg['active'].append(i[2])
     elif (params[1] == "staff"):
@@ -52,16 +65,17 @@ def db_tools(command):
       msg['childs'] = list()
       msg['active'] = list()
       for i in tmp_links:
-        msg['childs'].append(base.request("SELECT Name, Time_start from Projects WHERE ID_proj = '%s'" % (i[0])))
+        msg['childs'].append(base.request("SELECT Name, Time_start, ID_proj from Projects WHERE ID_proj = '%s'" % (i[0])))
         msg['active'].append(i[2])
     elif (params[1] == "bug"):
-      msg = dict()
-      msg['main'] = base.request("SELECT * from Bugs WHERE ID_bug = '%s'" % (params[0]))
-      msg['childs'] = list()
-      msg['childs'].append(base.request("SELECT * from Projects WHERE ID_proj = '%s'" % (msg['main'][1])))
-      msg['childs'].append(base.request("SELECT Name, Surname, Is_Fired from Workers WHERE ID_worker = '%s'" % (msg['main'][4])))
-      msg['childs'].append(base.request("SELECT Name, Surname, Is_Fired from Workers WHERE ID_worker = '%s'" % (msg['main'][5])))
-      msg['childs'].append(base.request("SELECT Name, Surname, Is_Fired from Workers WHERE ID_worker = '%s'" % (msg['main'][6])))
+      pass
+      #msg = dict()
+      #msg['main'] = base.request("SELECT * from Bugs WHERE ID_bug = '%s'" % (params[0]))
+      #msg['childs'] = list()
+      #msg['childs'].append(base.request("SELECT * from Projects WHERE ID_proj = '%s'" % (msg['main'][1])))
+      #msg['childs'].append(base.request("SELECT Name, Surname, Is_Fired from Workers WHERE ID_worker = '%s'" % (msg['main'][4])))
+      #msg['childs'].append(base.request("SELECT Name, Surname, Is_Fired from Workers WHERE ID_worker = '%s'" % (msg['main'][5])))
+      #msg['childs'].append(base.request("SELECT Name, Surname, Is_Fired from Workers WHERE ID_worker = '%s'" % (msg['main'][6])))
     del base
     return json.dumps(msg), 200
 
