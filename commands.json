@@ -1,0 +1,45 @@
+{
+  "show_commands":
+  {
+    "show_active_projects" : "SELECT * from Projects WHERE ifnull(Time_end, '') = ''",
+    "show_all_projects" : "SELECT * from Projects",
+    "show_active_workers" : "SELECT * from Workers WHERE Is_Fired = 0",
+    "show_all_workers" : "SELECT * from Workers",
+    "show_active_bugs" : "SELECT * from Bugs WHERE ifnull(Time_Fixed, '') = ''",
+    "show_all_bugs" :"SELECT * from Bugs",
+    "show_min_staff" :"SELECT ID_worker, Name, Surname from Workers",
+    "show_min_projects" : "SELECT ID_proj, Name from Projects",
+    "show_min_active_projects" : "SELECT ID_proj, Name from Projects WHERE ifnull(Time_end, '') = ''",
+    "show_min_dev" : "SELECT ID_worker, (Name || ' ' || Surname) FROM Workers WHERE Is_Fired = 0 AND Pos='Developer'",
+    "show_min_testers" : "SELECT ID_worker, (Name || ' ' || Surname) FROM Workers WHERE Is_Fired = 0 AND Pos='Tester'",
+    "show_project_names" : "SELECT Name from Projects",
+    "show_worker_names" : "SELECT Name || ' ' || Surname from Workers"
+  },
+  "add_commands":
+  {
+    "add_project" : "INSERT INTO Projects(Name, Time_start) VALUES ('%s', '%s')",
+    "add_worker" : "INSERT INTO Workers(Name, Surname, Email, Pos, Is_fired) VALUES ('%s', '%s', '%s', '%s', 0)",
+    "add_link" : "INSERT INTO ProjectWorkerLinks(ID_proj, ID_worker, Is_active) VALUES (%s, %s, 1)",
+    "add_bug" : "INSERT INTO Bugs(ID_proj, Name, Category, ID_fault, ID_finder, ID_fixer, Time_found, Time_deadline) VALUES (%s, '%s', '%s', %s, %s, %s, '%s', '%s');",
+    "bug_fix" : "UPDATE Bugs SET Time_fixed = date('now') WHERE ID_bug = %s"
+  },
+  "count_commands":
+  {
+    "count_worker_projects" :"SELECT COUNT(*) FROM ProjectWorkerLinks WHERE ID_worker == '%s' AND Is_active = 1",
+    "count_worker_current_project" : "SELECT COUNT(*) FROM ProjectWorkerLinks WHERE ID_worker == '%s' AND Is_active = 1 AND ID_proj == '%s'",
+    "count_project_worker_bugs" : "SELECT COUNT(*) FROM Bugs WHERE ID_proj=%s AND ifnull(Time_fixed, '') = '' AND ID_fixer=%s",
+    "count_project_bugs" : "SELECT COUNT(*) FROM Bugs WHERE ID_proj=%s AND ifnull(Time_fixed, '') = ''",
+    "count_worker_bugs" : "SELECT COUNT(*) FROM Bugs WHERE ifnull(Time_fixed, '') = '' AND (ID_fixer = %s)",
+    "count_project_workers" : "SELECT COUNT(*) FROM ProjectWorkerLinks WHERE ID_proj=%s AND Is_active = 1",
+    "count_project_bugs_all" : "SELECT COUNT(*) FROM Bugs WHERE ID_proj=%s",
+    "check_if_closed" : "SELECT IFNULL(Time_end, 0) FROM Projects WHERE ID_proj == %s",
+    "show_proj_bugs" : "SELECT * FROM Bugs WHERE ID_proj = %s",
+    "show_worker_bugs" : "SELECT * FROM Bugs WHERE ID_fault = %s OR ID_fixer = %s OR ID_finder = %s"
+  },
+  "action_commands" :
+  {
+    "finish_project" : "UPDATE Projects SET Time_end=date('now') WHERE ID_proj=%s;UPDATE ProjectWorkerLinks SET Is_active=0 WHERE ID_proj=%s;",
+    "remove_worker_from_project" : "UPDATE ProjectWorkerLinks SET Is_active=0 WHERE ID_proj=%s AND ID_worker=%s;",
+    "fire_worker": "UPDATE ProjectWorkerLinks SET Is_active=0 WHERE ID_worker=%s;UPDATE Workers SET Is_fired = 1 WHERE ID_worker=%s;"
+  }
+}

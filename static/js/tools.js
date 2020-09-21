@@ -4,6 +4,14 @@ Date.prototype.toDateInputValue = (function() {
     return local.toJSON().slice(0,10);
 });
 
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+// a and b are javascript Date objects
+function dateDiffInDays(a, b) {
+  // Discard the time and time-zone information.
+  return Math.abs(Math.floor((a-b) / _MS_PER_DAY));
+}
+
 function my_post_request(path)
 {
   let xhr = new XMLHttpRequest();

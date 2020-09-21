@@ -2,10 +2,18 @@ import sqlite3
 
 class DB:
   def __init__(self):
-    print("DB inited")
     self.conn = sqlite3.connect('database.db')
     self.c = self.conn.cursor()
     return
+
+  def action_request(self, request, params = []):
+    if (params == []):
+      self.c.execute(request)
+    else:
+      #print(request, params)
+      self.c.executescript(request % params)
+    self.conn.commit()
+    return self.c.fetchall()
 
   def request(self, request, params = []):
     if (params == []):

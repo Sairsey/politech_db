@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<script>
+    function killVictims()
+    {
+      list = document.getElementById("My_list");
+      for (i = 0; i < list.children.length; i++)
+      {
+        el = list.children[i];
+        bugs_now = JSON.parse(my_post_request("/db_tools/count_worker_bugs&&&" + el.id));
+        if (bugs_now != 0)
+          alert("We cannot fire " + el.innerText + "because he must fix " + bugs_now + " bugs first!!")
+        else
+        {
+          params = el.innerText.split(", ");
+          params[2] = params[2].split(" ")[0];
+          my_post_request("/db_tools/send_email&&&" + params[0] + "|" + params[1] + "|" + params[2]);
+          alert("Email Sended. Now firing!");
+          my_post_request("/db_tools/fire_worker&&&" + el.id + "|" + el.id);
+        }
+      }
+      document.location.reload();
+    }
+
+    function showVictims()
+    {
+      M = document.getElementById("M").value;
+      N = document.getElementById("N").value;
+      load_str = "/db_tools/show_victums&&&" + M + "|" + N;
+      data = my_post_request(load_str);
+      //document.getElementById("data_field").innerText = data;
+      data = JSON.parse(data);
+      list = document.createElement("ul")
+      list.id = "My_list";
+      for (i = 0; i < data.length; i++)
+      {
+        el = document.createElement("li")
+        el.innerText = data[i][1] + ", " + data[i][2] + ", " + data[i][3] + " bugs";
+        el.id = data[i][0];
+        list.appendChild(el);
+      }
+      document.getElementById("content").appendChild(list);
+      but = document.getElementById("main_button");
+      but.innerText = "Send emails and fire";
+      but.onclick = function(){killVictims()};
+    }
+</script>
+
+<p>Developer bugs per month <input type="number" style="width:auto" id="M" value="10" class="my_input"></p>
+<p>Tester bugs per month <input type="number" style="width:auto" id ="N" value="10" class="my_input"></p>
+<button class="styled-button" id ="main_button" onclick="showVictims()">Show victums</button>
+{% endblock %}

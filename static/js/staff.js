@@ -4,7 +4,7 @@ function loadAll(load_str)
 
   table = document.createElement("table");
   table.border = 1;
-  table.id = "Workers Table"
+  table.id = "Workers_table"
   table.classList.add("styled-table");
   table.width="100%";
 

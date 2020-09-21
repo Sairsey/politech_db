@@ -78,6 +78,28 @@ input:checked + .slider:before {
   box-sizing: border-box;
 }
 
+.styled-button {
+	border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 2px solid #555555;
+    border-radius: 8px;
+}
+
+.styled-button:hover {
+  background-color: #555555;
+  color: white;
+}
+
 .plus-button {
 	border: 2px solid lightgrey;
 	background-color: #fff;
