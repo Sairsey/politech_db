@@ -19,7 +19,7 @@ class Mailer:
     # send a text via email
     def send_email(self, dest_email: str, text: str):
         msg = MIMEText(text.encode('utf-8'), 'plain', 'utf-8')
-        msg['Subject'] = 'Train Script report'
+        msg['Subject'] = 'You Are Fired'
         msg['From'] = self.bot_email
         msg['To'] = dest_email
         self.server.send_message(msg)

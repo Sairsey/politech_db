@@ -1,0 +1,124 @@
+<html>
+<head>
+        <title>Development of Software</title>
+        <meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+	    <script src="{{url_for('static', filename='js/tools.js')}}"></script>
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png')}}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png')}}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png')}}">
+        <link rel="manifest" href="{{ url_for('static', filename='favicon//site.webmanifest')}}">
+        <link rel="mask-icon" href="{{ url_for('static', filename='favicon/safari-pinned-tab.svg')}}" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#2b5797">
+        <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+<script src="{{url_for('static', filename='js/plotly.min.js')}}"></script>
+<div class="content" id="content">
+</div>
+<script>
+  id = '{{ id }}';
+  type = '{{ type }}';
+  load_str = "/db_tools/profile_data&&&" + id + "|" + type;
+  data = my_post_request(load_str);
+  //document.getElementById("data_field").innerText = data;
+  data = JSON.parse(data);
+  headd = document.createElement("h1");
+  if (type == "staff")
+    headd.innerText = "Staff";
+  else if (type == "project")
+    headd.innerText = "Project";
+  headd.innerText += " data";
+  document.getElementById("content").appendChild(headd);
+
+  fields = [];
+  if (type == "staff")
+    fields = ["Id", "Name", "Surname", "Email", "Position", "Is Fired"];
+  else if (type == "project")
+    fields = ["Id", "Name", "Time_start", "Time_end"];
+
+  for (i = 0; i < fields.length; i++)
+  {
+    p = document.createElement("p");
+    p.innerText = fields[i] + " : " + data["main"][0][i];
+    document.getElementById("content").appendChild(p);
+  }
+
+  if (type == "project" && data["main"][0][3] != null)
+  {
+    p = document.createElement("div");
+    p.id = "myDiv"
+    bugs = JSON.parse(my_post_request("/db_tools/count_project_bugs_all&&&" + id))
+    human_days = JSON.parse(my_post_request("/db_tools/count_project_workers&&&" + id));
+    if (bugs.length != 0)
+    {
+    x_arr = [];
+    y_arr = [];
+    for (i = 0; i < bugs.length; i++)
+    {
+      x_arr.push(human_days * i);
+      y_arr.push(bugs[i][0]);
+    }
+    var trace1 = {
+     x: x_arr,
+     y: y_arr,
+     type: 'scatter'
+    };
+    plot_data = [trace1];
+
+    document.getElementById("content").appendChild(p);
+    Plotly.newPlot('myDiv', plot_data);
+    }
+  }
+
+  headd = document.createElement("h1");
+  if (type == "staff")
+    headd.innerText = "Projects";
+  else if (type == "project")
+    headd.innerText = "Staff";
+  document.getElementById("content").appendChild(headd);
+
+  if (type == "project")
+    fields = ["", "", ""];
+  else if (type == "staff")
+    fields = ["", ""];
+
+  list = document.createElement("ul");
+
+  for (i = 0; i < data["childs"].length; i++)
+  {
+    el = document.createElement("li");
+    str0 = ""
+    str1 = "";
+    str2 = "";
+
+    if (data["active"][i] == 0)
+      str0 += "\u274C";
+    else
+      str0 = "\u2705"
+
+    if (data["active"][i] != 0 && type =="project")
+      str0 = "" + data["childs"][i][3] + "";
+    for (j = 0; j < fields.length; j++)
+    {
+      if (type == "project" && j == fields.length - 1)
+      {
+        if (data["childs"][i][j] == 1)
+          str2 += 'Fired';
+        else
+          str2 += 'Working';
+      }
+      else
+        str1 += fields[j] + "" + data["childs"][i][j] + " ";
+    }
+    if (type == "staff")
+      el.innerHTML = str0 + str1 + str2;
+    else if (type == "project")
+      el.innerHTML = str0 + str1 + str2;
+    list.appendChild(el);
+  }
+  document.getElementById("content").appendChild(list);
+</script>
+</body>
+</html>

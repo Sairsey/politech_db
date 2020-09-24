@@ -28,7 +28,11 @@ def db_tools(command):
   if (command[0] in count_commands):
     base = DB()
     params = tuple(command[1].split("|"))
-    msg = base.request(count_commands[command[0]], params)
+    if ("count_project_bugs_all" == command[0]):
+      comm = params[0].join(count_commands[command[0]].split('%s'))
+      msg = base.request(comm)
+    else:
+      msg = base.request(count_commands[command[0]], params)
     del base
     return json.dumps(msg), 200
   if (command[0] in action_commands):
@@ -43,7 +47,7 @@ def db_tools(command):
     email = params[1]
     msg = "Hello dear " + params[0] + "!\n"
     msg += "We are sorry to inform you, that you made/fixed after deadline " + params[2] + " bugs in month, and now you are fired!\n"
-    msg += "Thank you for your hard work!"
+    msg += "Thank you for your really hard work and we wish you success in your life!"
     Mail_serv.send_email(email, msg)
     return "", 200
   if (command[0] == "show_victums"):
@@ -130,6 +134,13 @@ def profile_page():
   id = request.args.get('id')
   type = request.args.get('type')
   return render_template("profile.html", id = id, type = type)
+
+@app.route('/profile_min', methods=['GET', 'POST'])
+def profile2_page():
+  id = request.args.get('id')
+  type = request.args.get('type')
+  return render_template("profile_min.html", id = id, type = type)
+
 
 @app.route('/<page>')
 def any_page(page):

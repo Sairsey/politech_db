@@ -3,6 +3,7 @@
 {% block body %}
 
 <script src="{{url_for('static', filename='js/bugs.js')}}"></script>
+<script src="{{url_for('static', filename='js/plotly.min.js')}}"></script>
 
 <script>
   id = '{{ id }}';
@@ -40,12 +41,28 @@
 
   if (type == "project" && data["main"][0][3] != null)
   {
-    p = document.createElement("p");
+    p = document.createElement("div");
+    p.id = "myDiv"
     bugs = JSON.parse(my_post_request("/db_tools/count_project_bugs_all&&&" + id))
-    human_days = JSON.parse(my_post_request("/db_tools/count_project_workers&&&" + id)) *
-      dateDiffInDays(Date.parse(data["main"][0][2]), Date.parse(data["main"][0][3]));
-    p.innerText = "Quality :" + bugs + "/" + human_days;
+    human_days = JSON.parse(my_post_request("/db_tools/count_project_workers&&&" + id));
+
+    x_arr = [];
+    y_arr = [];
+    for (i = 0; i < bugs.length; i++)
+    {
+      x_arr.push(human_days * i);
+      y_arr.push(bugs[i][0]);
+    }
+    var trace1 = {
+     x: x_arr,
+     y: y_arr,
+     type: 'scatter'
+    };
+    alert(trace1);
+    plot_data = [trace1];
+
     document.getElementById("content").appendChild(p);
+    Plotly.newPlot('myDiv', plot_data);
   }
   if (type == "project" && data["main"][0][3] == null)
   {

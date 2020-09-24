@@ -30,8 +30,8 @@
     "count_project_worker_bugs" : "SELECT COUNT(*) FROM Bugs WHERE ID_proj=%s AND ifnull(Time_fixed, '') = '' AND ID_fixer=%s",
     "count_project_bugs" : "SELECT COUNT(*) FROM Bugs WHERE ID_proj=%s AND ifnull(Time_fixed, '') = ''",
     "count_worker_bugs" : "SELECT COUNT(*) FROM Bugs WHERE ifnull(Time_fixed, '') = '' AND (ID_fixer = %s)",
-    "count_project_workers" : "SELECT COUNT(*) FROM ProjectWorkerLinks WHERE ID_proj=%s AND Is_active = 1",
-    "count_project_bugs_all" : "SELECT COUNT(*) FROM Bugs WHERE ID_proj=%s",
+    "count_project_workers" : "SELECT COUNT(*) FROM ProjectWorkerLinks WHERE ID_proj=%s",
+    "count_project_bugs_all" : "SELECT COUNT(*) FROM Bugs WHERE ID_proj=%s GROUP BY strftime('%m-%Y', Time_found)",
     "check_if_closed" : "SELECT IFNULL(Time_end, 0) FROM Projects WHERE ID_proj == %s",
     "show_proj_bugs" : "SELECT * FROM Bugs WHERE ID_proj = %s",
     "show_worker_bugs" : "SELECT * FROM Bugs WHERE ID_fault = %s OR ID_fixer = %s OR ID_finder = %s"

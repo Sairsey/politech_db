@@ -33,7 +33,7 @@ CREATE TABLE Bugs (
     Time_fixed TEXT
 );
 
-INSERT INTO Projects(Name, Time_start) VALUES ("Databases", date("now"));
+INSERT INTO Projects(Name, Time_start) VALUES ("Databases", date("now",'start of month', '-1 day'));
 INSERT INTO Projects(Name, Time_start, Time_end) VALUES ("VectorChat", date('now','start of month', '-1 day'), date("now"));
 INSERT INTO Workers(Name, Surname, Email, Pos, Is_fired) VALUES ('Alexander', 'Sachuk', 'sachuk.as@edu.spbstu.ru', 'Developer', 0);
 INSERT INTO Workers(Name, Surname, Email, Pos, Is_fired) VALUES ('Vladimir', 'Parusov', 'parusov.va@edu.spbstu.ru', 'Tester', 0);
@@ -43,4 +43,5 @@ INSERT INTO ProjectWorkerLinks(ID_proj, ID_worker, Is_active) VALUES (2, 1, 0);
 INSERT INTO ProjectWorkerLinks(ID_proj, ID_worker, Is_active) VALUES (2, 2, 0);
 INSERT INTO Bugs(ID_proj, Name, Category, ID_fault, ID_finder, ID_fixer, Time_found, Time_deadline) VALUES (1, 'Long lines', 'codestyle', 1, 2, 2, date('now', "-2 day"), date('now', '-1 day'));
 INSERT INTO Bugs(ID_proj, Name, Category, ID_fault, ID_finder, ID_fixer, Time_found, Time_deadline) VALUES (1, 'Long lines', 'codestyle', 1, 2, 2, date('now','start of month', '-1 day', 'start of month'), date('now','start of month', '-1 day'));
+INSERT INTO Bugs(ID_proj, Name, Category, ID_fault, ID_finder, ID_fixer, Time_found, Time_deadline, Time_fixed) VALUES (2, 'Long lines', 'codestyle', 1, 2, 2, date('now', "-2 day"), date('now', '-1 day'),  date('now', '-1 day'));
 

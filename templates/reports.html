@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<script>
+  function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+  }
+</script>
+<script>
+    function proj_report()
+    {
+      document.getElementById("all_pages").innerHTML = ""
+      data = JSON.parse(my_post_request("/db_tools/show_min_projects"));
+      for (i = 0; i < data.length; i++)
+      {
+        fr = document.createElement('iframe');
+        fr.src = "/profile_min?id=" + data[i][0] + "&type=project";
+        fr.name="targetframe" + i;
+        fr.id = i;
+        fr.frameborder="0";
+        fr.width = "100%";
+        fr.scrolling="no";
+        // Adjusting the iframe height onload event
+        fr.onload = function() {resizeIframe(this);}
+        document.getElementById("all_pages").appendChild(fr);
+      }
+    }
+
+    function staff_report()
+    {
+      document.getElementById("all_pages").innerHTML = "";
+      data = JSON.parse(my_post_request("/db_tools/show_min_staff"));
+      for (i = 0; i < data.length; i++)
+      {
+        fr = document.createElement('iframe');
+        fr.src = "/profile_min?id=" + data[i][0] + "&type=staff";
+        fr.name="targetframe" + i;
+        fr.frameborder="0";
+        fr.id = i;
+        fr.width = "100%";
+        fr.scrolling="no";
+        // Adjusting the iframe height onload event
+         fr.onload = function() {resizeIframe(this);}
+        document.getElementById("all_pages").appendChild(fr);
+      }
+    }
+
+</script>
+<button class="styled-button" id ="proj_button" onclick="proj_report()">Project Reports</button>
+<button class="styled-button" id ="staff_button" onclick="staff_report()">Staff Reports</button>
+<div id="all_pages"></div>
+{% endblock %}
